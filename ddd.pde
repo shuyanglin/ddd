@@ -8,7 +8,7 @@ Society s;
 void setup()
 {
   
-  size(1000,300);
+  size(500,500);
   smooth();
   
   s = new Society();
@@ -64,7 +64,7 @@ void draw()
       }
     }
   }
-  text(s.collective+"/"+s.population, 50, 250);
+  //text(s.collective+"/"+s.population, 50, 250);
   //saveFrame("frames/######.tif");
 }
  
@@ -108,11 +108,23 @@ class Person {
     }
     if (n==3)
     {
-      c = color(#96ef62);
+      c = color(#94fca6);
     }
     if (n==4)
     {
-      c = color(#a466d6);
+      c = color(#6e1ccc);
+    }
+    
+    //start from any direction
+    int p = (int)random(0,2);
+    int q = (int)random(0,2);
+    if(p==1)
+    {
+      i = -1;
+    }
+    if(q==1)
+    {
+      j = -1;
     }
   }
  
@@ -143,7 +155,7 @@ class Society{
   Society()
   {
     ppl = new ArrayList();
-    for (int i=0;i<10;i++)
+    for (int i=0;i<100;i++)
     {
       Person P = new Person();
       ppl.add(P);
