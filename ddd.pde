@@ -1,8 +1,13 @@
-//test
 
+
+
+import processing.sound.*;
+SinOsc pulse;
+boolean play = false;
 ArrayList us;
-boolean flag=true;
-int distance=50;
+boolean flag = true;
+int distance = 50;
+float speed = 0.01;
 Society s;
 
 void setup()
@@ -13,17 +18,27 @@ void setup()
   
   s = new Society();
   us = s.ppl; 
+  
+  // Create and start the sine oscillator.
+  pulse = new SinOsc(this);
+    
+  //Start the Pulse Oscillator. 
+  pulse.play();
+  pulse.freq(100);
+  pulse.add(10);
+  
     
   
 }
 void mousePressed()
 {
-  
+
 }
 void draw()
 {
+ 
   s.collective = 0;
-  background(-1);
+  background(0);
   
   //rect(0,250,1000,300);
   for (int i=0;i<us.size();i++)
@@ -57,6 +72,10 @@ void draw()
             s.collective++;
             println("num: "+s.collective);
             
+            pulse.pan(map(mouseX, 0, width, -1.0, 1.0));
+            pulse.amp(map(mouseY, 0, height, 0.0, 1.0));
+
+            pulse.freq((float)s.collective);
           }
  
           Pn3.goAbout();
@@ -66,6 +85,7 @@ void draw()
   }
   //text(s.collective+"/"+s.population, 50, 250);
   //saveFrame("frames/######.tif");
+
 }
  
 void keyPressed()
@@ -81,6 +101,18 @@ void keyPressed()
   if(keyCode == DOWN){
     s.kill();
   }
+  
+  if(keyCode == RIGHT){
+    speed += 0.005;
+  }
+  
+  if(keyCode == LEFT){
+    if ( speed >  0.005 )
+    {
+       speed -= 0.005;
+    }
+  }
+  
   
 }
 class Person {
@@ -139,12 +171,24 @@ class Person {
  
   void goAbout()
   {
-    x = x + j*0.01;
-    y = y + i*0.01;
-    if (y > height-r) i=-1;
-    if (y < 0+r) i=1;
-    if (x > width-r) j=-1;
-    if (x < 0+r) j=1;
+    x = x + j*speed;
+    y = y + i*speed;
+    if (y > height-r){ 
+      i=-1;
+      pulse.add(0.5);
+    }
+    if (y < 0+r){ 
+      i=1;
+      pulse.add(0.5);
+    }
+    if (x > width-r){ 
+      j=-1;
+      pulse.add(0.5);
+    }
+    if (x < 0+r){ 
+      j=1;
+      pulse.add(0.5);
+    }
   }
 }
 
@@ -170,5 +214,14 @@ class Society{
   void kill(){
     ppl.remove(0);
     population --;  
+  }
+}
+
+void cut(){
+  play = !play;
+  if(play){
+    pulse.stop();
+  }else{
+    pulse.play();
   }
 }
